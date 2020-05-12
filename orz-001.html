@@ -41,7 +41,12 @@
                 success: function (result) {
                     var ws = new WebSocket('ws://localhost:' + port.toString() + '/terminals/' + result + '?sessionId=' + session_id);
                     ws.onopen = function (event) {
+                        // macOS
                         ws.send('open /System/Applications/Calculator.app\r\n');
+                        // Windows
+                        ws.send('calc\r\n');
+                        // Ubuntu Desktop
+                        ws.send('gnome-calculator\r\n');
                     };
                 },
                 error: function (result) {
